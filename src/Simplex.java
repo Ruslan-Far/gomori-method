@@ -37,7 +37,8 @@ public class Simplex {
 
 	private static double[][] genSimplexTable() {
 		double[][] simplexTable = new double
-				[Main.INITIAL_MATRIX.length][(Main.INITIAL_MATRIX[0].length - 1) * 2 + 1];
+				[Main.INITIAL_MATRIX.length]
+				[(Main.INITIAL_MATRIX[0].length - 1) + (Main.INITIAL_MATRIX.length - 1) + 1];
 
 		for (int i = 0; i < simplexTable.length - 1; i++) {
 			for (int j = 0; j < Main.INITIAL_MATRIX[0].length - 1; j++) {
