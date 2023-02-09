@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Simplex {
 
 	public static void method() {
@@ -7,6 +9,7 @@ public class Simplex {
 
 		countIteration = 0;
 		columns = new int[Main.INITIAL_MATRIX[0].length - 1];
+		Arrays.fill(columns, -1);
 		System.out.println("------Симплекс-метод------");
 		simplexTable = genSimplexTable();
 		System.out.println("Сгенерированная симплекс-таблица");
@@ -121,10 +124,12 @@ public class Simplex {
 			for (int i = 0; i < columns.length; i++) {
 				if (count == columns[i]) {
 					System.out.printf(" %.3f", simplexTable[i][simplexTable[i].length - 1]);
-					count++;
 					break;
 				}
+				if (i == columns.length - 1)
+					System.out.print(" 0,000");
 			}
+			count++;
 		}
 		System.out.println(" )");
 		System.out.printf("Значение целевой функции: %.3f\n", simplexTable[simplexTable.length - 1][simplexTable[0].length - 1]);
