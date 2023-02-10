@@ -9,7 +9,6 @@ public class Simplex {
 		int[] coordsMinInColB;
 
 		countIteration = 0;
-//		columns = new int[Main.INITIAL_MATRIX[0].length - 1];
 		columns = new int[Main.INITIAL_MATRIX.length - 1];
 		Arrays.fill(columns, -1);
 		coordsMinInColB = new int[2];
@@ -36,15 +35,17 @@ public class Simplex {
 			addNewBasisVar(simplexTable, coordsMinInRow[0], coordsMinInRow[1]);
 			System.out.println("После добавления базисной переменной");
 			CommonFunctions.printMatrix(simplexTable);
-//			return;
 		}
-//		return;
 		while (!isOptimal(simplexTable)) {
 			System.out.println(++countIteration + " итерация");
 			int[] coordsMinInRowF = getCoordsMinInRowF(simplexTable);
 			System.out.println("Координаты минимального числа в строке F: " + coordsMinInRowF[0] + " " + coordsMinInRowF[1]);
 			System.out.println("Минимальное число в строке F: " + simplexTable[coordsMinInRowF[0]][coordsMinInRowF[1]]);
 			int[] coordsMinRatioColBtoColBasis = getCoordsMinRatioColBtoColBasis(simplexTable, coordsMinInRowF);
+			if (coordsMinRatioColBtoColBasis[0] == -1 && coordsMinRatioColBtoColBasis[1] == -1) {
+				System.out.println("Решений нет");
+				return;
+			}
 			System.out.println("Координаты свободного члена в столбце B, после деления которого получилось минимальное число: " + coordsMinRatioColBtoColBasis[0] + " " + coordsMinRatioColBtoColBasis[1]);
 			System.out.println("Координаты числа, на которое будем делить всю строку: " + coordsMinRatioColBtoColBasis[0] + " " + coordsMinInRowF[1]);
 			columns[coordsMinRatioColBtoColBasis[0]] = coordsMinInRowF[1];
@@ -73,8 +74,8 @@ public class Simplex {
 			simplexTable[i][simplexTable[i].length - 1] = Main.INITIAL_MATRIX[i][Main.INITIAL_MATRIX[i].length - 1];
 		}
 		for (int j = 0; j < Main.INITIAL_MATRIX[0].length - 1; j++) {
-//			simplexTable[simplexTable.length - 1][j] = -Main.INITIAL_MATRIX[Main.INITIAL_MATRIX.length - 1][j]; // max
-			simplexTable[simplexTable.length - 1][j] = Main.INITIAL_MATRIX[Main.INITIAL_MATRIX.length - 1][j];
+			simplexTable[simplexTable.length - 1][j] = -Main.INITIAL_MATRIX[Main.INITIAL_MATRIX.length - 1][j]; // max
+//			simplexTable[simplexTable.length - 1][j] = Main.INITIAL_MATRIX[Main.INITIAL_MATRIX.length - 1][j];
 		}
 		return simplexTable;
 	}
@@ -110,7 +111,6 @@ public class Simplex {
 	}
 
 	private static boolean isOptimal(double[][] simplexTable) {
-//		for (int j = 0; j < Main.INITIAL_MATRIX[0].length - 1; j++) {
 		for (int j = 0; j < simplexTable[0].length - 1; j++) {
 			if (simplexTable[simplexTable.length - 1][j] < 0)
 				return false;
@@ -123,7 +123,6 @@ public class Simplex {
 		double min = 999999999;
 
 		coords[0] = simplexTable.length - 1;
-//		for (int j = 0; j < Main.INITIAL_MATRIX[0].length - 1; j++) {
 		for (int j = 0; j < simplexTable[0].length - 1; j++) {
 			if (simplexTable[simplexTable.length - 1][j] < min) {
 				coords[1] = j;
@@ -149,6 +148,10 @@ public class Simplex {
 				coordsMinRatioColBtoColBasis[0] = i;
 				min = ratio;
 			}
+		}
+		if (min == 999999999) {
+			coordsMinRatioColBtoColBasis[0] = -1;
+			coordsMinRatioColBtoColBasis[1] = -1;
 		}
 		return coordsMinRatioColBtoColBasis;
 	}
@@ -179,7 +182,6 @@ public class Simplex {
 		System.out.println("Оптимальное решение получено");
 		count = 0;
 		System.out.print("(");
-//		while (count != columns.length) {
 		while (count != Main.INITIAL_MATRIX[0].length - 1) {
 			for (int i = 0; i < columns.length; i++) {
 				if (count == columns[i]) {
@@ -192,7 +194,7 @@ public class Simplex {
 			count++;
 		}
 		System.out.println(" )");
-//		System.out.printf("Значение целевой функции: %.3f\n", simplexTable[simplexTable.length - 1][simplexTable[0].length - 1]); // max
-		System.out.printf("Значение целевой функции: %.3f\n", -simplexTable[simplexTable.length - 1][simplexTable[0].length - 1]);
+		System.out.printf("Значение целевой функции: %.3f\n", simplexTable[simplexTable.length - 1][simplexTable[0].length - 1]); // max
+//		System.out.printf("Значение целевой функции: %.3f\n", -simplexTable[simplexTable.length - 1][simplexTable[0].length - 1]);
 	}
 }
