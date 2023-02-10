@@ -71,12 +71,22 @@ public class Main {
 		while (isNotInt()) {
 			int indexInAnswerMaxFraction;
 			double[] q;
+			double[] rationsRowFtoPenultimateRow;
+			int indexMinRationRowFtoPenultimateRow;
 
 			indexInAnswerMaxFraction = getIndexInAnswerMaxFraction();
 			q = new double[simplexTable[0].length];
 			initQ(simplexTable, q, Simplex.rows[indexInAnswerMaxFraction]);
 			CommonFunctions.printArray(q);
 			simplexTableSecond = genSimplexTableSecond(simplexTable, q);
+			CommonFunctions.printMatrix(simplexTableSecond);
+			rationsRowFtoPenultimateRow = new double[simplexTableSecond[0].length];
+			initRationsRowFtoPenultimateRow(simplexTableSecond, rationsRowFtoPenultimateRow);
+			CommonFunctions.printArray(rationsRowFtoPenultimateRow);
+			indexMinRationRowFtoPenultimateRow = getIndexMinRationRowFtoPenultimateRow(rationsRowFtoPenultimateRow);
+			System.out.println(indexMinRationRowFtoPenultimateRow);
+			System.out.println(rationsRowFtoPenultimateRow[indexMinRationRowFtoPenultimateRow]);
+			divideRowOnNum(simplexTableSecond, simplexTableSecond.length - 2, indexMinRationRowFtoPenultimateRow);
 			CommonFunctions.printMatrix(simplexTableSecond);
 			return;
 		}
@@ -146,5 +156,43 @@ public class Main {
 			simplexTableSecond[simplexTable.length][j] = -simplexTable[simplexTable.length - 1][j];
 		}
 		return simplexTableSecond;
+	}
+
+	private static void initRationsRowFtoPenultimateRow(double[][] simplexTableSecond,
+													 double[] rationsRowFtoPenultimateRow) {
+		for (int j = 0; j < simplexTableSecond[0].length; j++) {
+			if (simplexTableSecond[simplexTableSecond.length - 2][j] == 0
+					|| j == simplexTableSecond[0].length - 2
+					|| j == simplexTableSecond[0].length - 1) {
+				rationsRowFtoPenultimateRow[j] = INF_MAX;
+			}
+			else
+				rationsRowFtoPenultimateRow[j] =
+						simplexTableSecond[simplexTableSecond.length - 1][j]
+								/ simplexTableSecond[simplexTableSecond.length - 2][j];
+		}
+	}
+
+	private static int getIndexMinRationRowFtoPenultimateRow(double[] rationsRowFtoPenultimateRow) {
+		double min;
+		int index;
+
+		min = INF_MAX;
+		index = -1;
+		for (int i = 0; i < rationsRowFtoPenultimateRow.length; i++) {
+			if (rationsRowFtoPenultimateRow[i] < min) {
+				index = i;
+				min = rationsRowFtoPenultimateRow[i];
+			}
+		}
+		return index;
+	}
+
+	private static void divideRowOnNum(double[][] simplexTableSecond, int row, int column) {
+		double num = simplexTableSecond[row][column];
+
+		for (int j = 0; j < simplexTableSecond[row].length; j++) {
+			simplexTableSecond[row][j] /= num;
+		}
 	}
 }
