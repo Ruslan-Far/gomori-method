@@ -88,8 +88,14 @@ public class Main {
 			System.out.println(rationsRowFtoPenultimateRow[indexMinRationRowFtoPenultimateRow]);
 			divideRowOnNum(simplexTableSecond, simplexTableSecond.length - 2, indexMinRationRowFtoPenultimateRow);
 			CommonFunctions.printMatrix(simplexTableSecond);
-			return;
+			Simplex.addNewBasisVar(simplexTableSecond,
+					simplexTableSecond.length - 2, indexMinRationRowFtoPenultimateRow);
+			CommonFunctions.printMatrix(simplexTableSecond);
+			getAnswer(simplexTableSecond, indexMinRationRowFtoPenultimateRow);
+			simplexTable = simplexTableSecond;
+//			return;
 		}
+		System.out.println("Целочисленное решение найдено");
 	}
 
 	private static boolean isNotInt() {
@@ -194,5 +200,23 @@ public class Main {
 		for (int j = 0; j < simplexTableSecond[row].length; j++) {
 			simplexTableSecond[row][j] /= num;
 		}
+	}
+
+	private static void getAnswer(double[][] simplexTableSecond, int indexMinRationRowFtoPenultimateRow) {
+		for (int i = 0; i < Simplex.answer.length; i++) {
+			if (indexMinRationRowFtoPenultimateRow != i) {
+				if (Simplex.rows[i] != -1)
+					Simplex.answer[i] = simplexTableSecond[Simplex.rows[i]][simplexTableSecond[0].length - 1];
+			}
+			else {
+				Simplex.answer[i] = simplexTableSecond[simplexTableSecond.length - 2][simplexTableSecond[0].length - 1];
+				Simplex.rows[i] = simplexTableSecond.length - 2;
+			}
+		}
+		CommonFunctions.printArray(Simplex.answer);
+		System.out.printf("Значение целевой функции: %.3f\n",
+				-simplexTableSecond[simplexTableSecond.length - 1][simplexTableSecond[0].length - 1]); // max
+//		System.out.printf("Значение целевой функции: %.3f\n",
+//				simplexTableSecond[simplexTableSecond.length - 1][simplexTableSecond[0].length - 1]); // min
 	}
 }

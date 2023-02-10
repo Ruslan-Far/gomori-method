@@ -169,7 +169,7 @@ public class Simplex {
 		}
 	}
 
-	private static void addNewBasisVar(double[][] simplexTable, int rowOneBasisVar, int colOneBasisVar) {
+	public static void addNewBasisVar(double[][] simplexTable, int rowOneBasisVar, int colOneBasisVar) {
 		for (int i = 0; i < simplexTable.length; i++) {
 			if (i == rowOneBasisVar)
 				continue;
