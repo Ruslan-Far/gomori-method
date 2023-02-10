@@ -10,12 +10,12 @@ public class Main {
 //			{4, 5, 6, -1}
 //	};
 
-	public static final int[][] INITIAL_MATRIX = {
-			{1, 2, 3, 35},
-			{4, 3, 2, 45},
-			{3, 1, 1, 40},
-			{4, 5, 6, -1}
-	};
+//	public static final int[][] INITIAL_MATRIX = {
+//			{1, 2, 3, 35},
+//			{4, 3, 2, 45},
+//			{3, 1, 1, 40},
+//			{4, 5, 6, -1}
+//	};
 
 //	public static final int[][] INITIAL_MATRIX = {
 //			{0, 4, 4},
@@ -52,23 +52,26 @@ public class Main {
 //			{1, 3, -1}
 //	};
 
-//	public static final int[][] INITIAL_MATRIX = {
-//			{-1, -1, -6},
-//			{-3, -4, -7},
-//			{0, 4, 7},
-//			{1, 4, -1}
-//	};
+	public static final int[][] INITIAL_MATRIX = {
+			{-1, -1, -6},
+			{-3, -4, -7},
+			{0, 4, 7},
+			{1, 4, -1}
+	};
 
 	public static void main(String[] args) {
 		double[][] simplexTable;
 		double[][] simplexTableSecond;
+		int countIteration;
 
 		simplexTable = Simplex.method();
 		if (simplexTable == null)
 			return;
-		CommonFunctions.printArray(Simplex.answer);
-		CommonFunctions.printArray(Simplex.rows);
+		System.out.println("------Метод Гомори------");
+		countIteration = 0;
 		while (isNotInt()) {
+			System.out.println("Текущее решение нецелочисленное");
+			System.out.println(++countIteration + " итерация");
 			int indexInAnswerMaxFraction;
 			double[] q;
 			double[] rationsRowFtoPenultimateRow;
@@ -77,23 +80,28 @@ public class Main {
 			indexInAnswerMaxFraction = getIndexInAnswerMaxFraction();
 			q = new double[simplexTable[0].length];
 			initQ(simplexTable, q, Simplex.rows[indexInAnswerMaxFraction]);
+			System.out.println("Элементы массива q");
 			CommonFunctions.printArray(q);
 			simplexTableSecond = genSimplexTableSecond(simplexTable, q);
+			System.out.println("Новая симплекс-таблица");
 			CommonFunctions.printMatrix(simplexTableSecond);
 			rationsRowFtoPenultimateRow = new double[simplexTableSecond[0].length];
 			initRationsRowFtoPenultimateRow(simplexTableSecond, rationsRowFtoPenultimateRow);
+			System.out.println("Массив отношения строки F к предпоследней строке");
 			CommonFunctions.printArray(rationsRowFtoPenultimateRow);
 			indexMinRationRowFtoPenultimateRow = getIndexMinRationRowFtoPenultimateRow(rationsRowFtoPenultimateRow);
-			System.out.println(indexMinRationRowFtoPenultimateRow);
-			System.out.println(rationsRowFtoPenultimateRow[indexMinRationRowFtoPenultimateRow]);
+			System.out.println("Координаты минимального числа в строке F: " + (simplexTableSecond.length - 1) + " " + indexMinRationRowFtoPenultimateRow);
+			System.out.println("Минимальное число в строке F: " + rationsRowFtoPenultimateRow[indexMinRationRowFtoPenultimateRow]);
+			System.out.println("Число, на которое будем делить всю строку: " + simplexTableSecond[simplexTableSecond.length - 2][indexMinRationRowFtoPenultimateRow]);
 			divideRowOnNum(simplexTableSecond, simplexTableSecond.length - 2, indexMinRationRowFtoPenultimateRow);
+			System.out.println("После деления");
 			CommonFunctions.printMatrix(simplexTableSecond);
 			Simplex.addNewBasisVar(simplexTableSecond,
 					simplexTableSecond.length - 2, indexMinRationRowFtoPenultimateRow);
+			System.out.println("После добавления базисной переменной");
 			CommonFunctions.printMatrix(simplexTableSecond);
 			getAnswer(simplexTableSecond, indexMinRationRowFtoPenultimateRow);
 			simplexTable = simplexTableSecond;
-//			return;
 		}
 		System.out.println("Целочисленное решение найдено");
 	}
@@ -215,8 +223,6 @@ public class Main {
 		}
 		CommonFunctions.printArray(Simplex.answer);
 		System.out.printf("Значение целевой функции: %.3f\n",
-				-simplexTableSecond[simplexTableSecond.length - 1][simplexTableSecond[0].length - 1]); // max
-//		System.out.printf("Значение целевой функции: %.3f\n",
-//				simplexTableSecond[simplexTableSecond.length - 1][simplexTableSecond[0].length - 1]); // min
+				-simplexTableSecond[simplexTableSecond.length - 1][simplexTableSecond[0].length - 1]);
 	}
 }

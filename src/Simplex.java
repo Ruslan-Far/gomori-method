@@ -78,8 +78,8 @@ public class Simplex {
 			simplexTable[i][simplexTable[i].length - 1] = Main.INITIAL_MATRIX[i][Main.INITIAL_MATRIX[i].length - 1];
 		}
 		for (int j = 0; j < Main.INITIAL_MATRIX[0].length - 1; j++) {
-			simplexTable[simplexTable.length - 1][j] = -Main.INITIAL_MATRIX[Main.INITIAL_MATRIX.length - 1][j]; // max
-//			simplexTable[simplexTable.length - 1][j] = Main.INITIAL_MATRIX[Main.INITIAL_MATRIX.length - 1][j];
+//			simplexTable[simplexTable.length - 1][j] = -Main.INITIAL_MATRIX[Main.INITIAL_MATRIX.length - 1][j]; // max
+			simplexTable[simplexTable.length - 1][j] = Main.INITIAL_MATRIX[Main.INITIAL_MATRIX.length - 1][j];
 		}
 		return simplexTable;
 	}
@@ -207,7 +207,7 @@ public class Simplex {
 			count++;
 		}
 		System.out.println(" )");
-		System.out.printf("Значение целевой функции: %.3f\n", simplexTable[simplexTable.length - 1][simplexTable[0].length - 1]); // max
-//		System.out.printf("Значение целевой функции: %.3f\n", -simplexTable[simplexTable.length - 1][simplexTable[0].length - 1]);
+//		System.out.printf("Значение целевой функции: %.3f\n", simplexTable[simplexTable.length - 1][simplexTable[0].length - 1]); // max
+		System.out.printf("Значение целевой функции: %.3f\n", -simplexTable[simplexTable.length - 1][simplexTable[0].length - 1]);
 	}
 }
