@@ -34,15 +34,15 @@ public class Main {
 //			{3, -3, -1}
 //	};
 
-	public static final int[][] INITIAL_MATRIX = {
-			{1, -5, -6},
-			{0, -3, 4},
-			{2, 1, 8},
-			{-3, 3, 0},
-			{-1, 0, 0},
-			{0, -1, 0},
-			{1, 3, -1}
-	};
+//	public static final int[][] INITIAL_MATRIX = {
+//			{1, -5, -6},
+//			{0, -3, 4},
+//			{2, 1, 8},
+//			{-3, 3, 0},
+//			{-1, 0, 0},
+//			{0, -1, 0},
+//			{1, 3, -1}
+//	};
 
 //	public static final int[][] INITIAL_MATRIX = {
 //			{1, -4, -6},
@@ -52,12 +52,12 @@ public class Main {
 //			{1, 3, -1}
 //	};
 
-//	public static final int[][] INITIAL_MATRIX = {
-//			{-1, -1, -6},
-//			{-3, -4, -7},
-//			{0, 4, 7},
-//			{1, 4, -1}
-//	};
+	public static final int[][] INITIAL_MATRIX = {
+			{-1, -1, -6},
+			{-3, -4, -7},
+			{0, 4, 7},
+			{1, 4, -1}
+	};
 
 	public static final boolean MIN = true;
 
@@ -84,7 +84,7 @@ public class Main {
 			initQ(simplexTable, q, Simplex.rows[indexInAnswerMaxFraction]);
 			System.out.println("Элементы массива q");
 			CommonFunctions.printArray(q);
-			simplexTableSecond = genSimplexTableSecond(simplexTable, q);
+			simplexTableSecond = genSimplexTableSecond(simplexTable, q, countIteration);
 			System.out.println("Новая симплекс-таблица");
 			CommonFunctions.printMatrix(simplexTableSecond);
 			rationsRowFtoPenultimateRow = new double[simplexTableSecond[0].length];
@@ -111,7 +111,9 @@ public class Main {
 	private static boolean isNotInt() {
 		for (int i = 0; i < Simplex.answer.length; i++) {
 			if (Simplex.answer[i] % 1 != 0)
-				return true;
+				if (Math.abs(Simplex.answer[i] % 1) > (1 / INF_MAX))
+					if ((1 - Math.abs(Simplex.answer[i] % 1)) > (1 / INF_MAX))
+						return true;
 		}
 		return false;
 	}
@@ -142,7 +144,7 @@ public class Main {
 		}
 	}
 
-	private static double[][] genSimplexTableSecond(double[][] simplexTable, double[] q) {
+	private static double[][] genSimplexTableSecond(double[][] simplexTable, double[] q, int countIteration) {
 		double[][] simplexTableSecond;
 
 		simplexTableSecond = new double[simplexTable.length + 1][simplexTable[0].length + 1];
@@ -166,10 +168,16 @@ public class Main {
 		}
 		for (int j = 0; j < simplexTable[0].length; j++) {
 			if (j == simplexTable[0].length - 1) {
-				simplexTableSecond[simplexTable.length][j + 1] = -simplexTable[simplexTable.length - 1][j];
+				if (countIteration == 1 && !MIN)
+					simplexTableSecond[simplexTable.length][j + 1] = -simplexTable[simplexTable.length - 1][j];
+				else
+					simplexTableSecond[simplexTable.length][j + 1] = simplexTable[simplexTable.length - 1][j];
 				continue;
 			}
-			simplexTableSecond[simplexTable.length][j] = -simplexTable[simplexTable.length - 1][j];
+			if (countIteration == 1 && !MIN)
+				simplexTableSecond[simplexTable.length][j] = -simplexTable[simplexTable.length - 1][j];
+			else
+				simplexTableSecond[simplexTable.length][j] = simplexTable[simplexTable.length - 1][j];
 		}
 		return simplexTableSecond;
 	}
