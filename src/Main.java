@@ -34,15 +34,15 @@ public class Main {
 //			{3, -3, -1}
 //	};
 
-//	public static final int[][] INITIAL_MATRIX = {
-//			{1, -5, -6},
-//			{0, -3, 4},
-//			{2, 1, 8},
-//			{-3, 3, 0},
-//			{-1, 0, 0},
-//			{0, -1, 0},
-//			{1, 3, -1}
-//	};
+	public static final int[][] INITIAL_MATRIX = {
+			{1, -5, -6},
+			{0, -3, 4},
+			{2, 1, 8},
+			{-3, 3, 0},
+			{-1, 0, 0},
+			{0, -1, 0},
+			{1, 3, -1}
+	};
 
 //	public static final int[][] INITIAL_MATRIX = {
 //			{1, -4, -6},
@@ -52,12 +52,14 @@ public class Main {
 //			{1, 3, -1}
 //	};
 
-	public static final int[][] INITIAL_MATRIX = {
-			{-1, -1, -6},
-			{-3, -4, -7},
-			{0, 4, 7},
-			{1, 4, -1}
-	};
+//	public static final int[][] INITIAL_MATRIX = {
+//			{-1, -1, -6},
+//			{-3, -4, -7},
+//			{0, 4, 7},
+//			{1, 4, -1}
+//	};
+
+	public static final boolean MIN = true;
 
 	public static void main(String[] args) {
 		double[][] simplexTable;
@@ -67,7 +69,7 @@ public class Main {
 		simplexTable = Simplex.method();
 		if (simplexTable == null)
 			return;
-		System.out.println("------Метод Гомори------");
+		System.out.println("\n\n\n\n------Метод Гомори------");
 		countIteration = 0;
 		while (isNotInt()) {
 			System.out.println("Текущее решение нецелочисленное");
