@@ -2,7 +2,10 @@ import java.util.Arrays;
 
 public class Simplex {
 
-	public static void method() {
+	public static double[] answer = new double[Main.INITIAL_MATRIX[0].length - 1];
+	public static int[] rows = new int[Main.INITIAL_MATRIX[0].length - 1];
+
+	public static double[][] method() {
 		double[][] simplexTable;
 		int countIteration;
 		int[] columns;
@@ -23,7 +26,7 @@ public class Simplex {
 			int[] coordsMinInRow = getCoordsMinInRow(simplexTable, coordsMinInColB);
 			if (coordsMinInRow[0] == -1 && coordsMinInRow[1] == -1) {
 				System.out.println("Решений нет");
-				return;
+				return null;
 			}
 			System.out.println("Найдено самое минимальное отрицательное число в ведущей строке (на которое будем делить всю строку)");
 			System.out.println("Координаты: " + coordsMinInRow[0] + " " + coordsMinInRow[1]);
@@ -44,7 +47,7 @@ public class Simplex {
 			int[] coordsMinRatioColBtoColBasis = getCoordsMinRatioColBtoColBasis(simplexTable, coordsMinInRowF);
 			if (coordsMinRatioColBtoColBasis[0] == -1 && coordsMinRatioColBtoColBasis[1] == -1) {
 				System.out.println("Решений нет");
-				return;
+				return null;
 			}
 			System.out.println("Координаты свободного члена в столбце B, после деления которого получилось минимальное число: " + coordsMinRatioColBtoColBasis[0] + " " + coordsMinRatioColBtoColBasis[1]);
 			System.out.println("Координаты числа, на которое будем делить всю строку: " + coordsMinRatioColBtoColBasis[0] + " " + coordsMinInRowF[1]);
@@ -59,6 +62,7 @@ public class Simplex {
 			System.out.println("\n\n");
 		}
 		getAnswer(simplexTable, columns);
+		return simplexTable;
 	}
 
 	private static double[][] genSimplexTable() {
@@ -94,7 +98,7 @@ public class Simplex {
 
 	private static int[] getCoordsMinInRow(double[][] simplexTable, int[] coordsMinInColB) {
 		int[] coords = new int[2];
-		double min = 999999999;
+		double min = Main.INF_MAX;
 
 		coords[0] = coordsMinInColB[0];
 		for (int j = 0; j < simplexTable[coords[0]].length - 1; j++) {
@@ -120,7 +124,7 @@ public class Simplex {
 
 	private static int[] getCoordsMinInRowF(double[][] simplexTable) {
 		int[] coords = new int[2];
-		double min = 999999999;
+		double min = Main.INF_MAX;
 
 		coords[0] = simplexTable.length - 1;
 		for (int j = 0; j < simplexTable[0].length - 1; j++) {
@@ -134,7 +138,7 @@ public class Simplex {
 
 	private static int[] getCoordsMinRatioColBtoColBasis(double[][] simplexTable, int[] coordsMinInRowF) {
 		int[] coordsMinRatioColBtoColBasis = new int[2];
-		double min = 999999999;
+		double min = Main.INF_MAX;
 		double ratio;
 
 		coordsMinRatioColBtoColBasis[1] = simplexTable[0].length - 1;
@@ -149,7 +153,7 @@ public class Simplex {
 				min = ratio;
 			}
 		}
-		if (min == 999999999) {
+		if (min == Main.INF_MAX) {
 			coordsMinRatioColBtoColBasis[0] = -1;
 			coordsMinRatioColBtoColBasis[1] = -1;
 		}
@@ -178,18 +182,27 @@ public class Simplex {
 
 	private static void getAnswer(double[][] simplexTable, int[] columns) {
 		int count;
+		int countForAnswer;
 
 		System.out.println("Оптимальное решение получено");
 		count = 0;
+		countForAnswer = 0;
 		System.out.print("(");
 		while (count != Main.INITIAL_MATRIX[0].length - 1) {
 			for (int i = 0; i < columns.length; i++) {
 				if (count == columns[i]) {
 					System.out.printf(" %.3f", simplexTable[i][simplexTable[i].length - 1]);
+					answer[countForAnswer] = simplexTable[i][simplexTable[i].length - 1];
+					rows[countForAnswer] = i;
+					countForAnswer++;
 					break;
 				}
-				if (i == columns.length - 1)
+				if (i == columns.length - 1) {
 					System.out.print(" 0,000");
+					answer[countForAnswer] = 0;
+					rows[countForAnswer] = -1;
+					countForAnswer++;
+				}
 			}
 			count++;
 		}

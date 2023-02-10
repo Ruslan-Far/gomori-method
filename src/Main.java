@@ -1,5 +1,8 @@
 public class Main {
 
+	public static final double INF_MAX = 999999999;
+	public static final double INF_MIN = -1;
+
 //	public static final int[][] INITIAL_MATRIX = {
 //			{1, 2, 3, 35},
 //			{2, 3, 2, 45},
@@ -57,6 +60,91 @@ public class Main {
 //	};
 
 	public static void main(String[] args) {
-		Simplex.method();
+		double[][] simplexTable;
+		double[][] simplexTableSecond;
+
+		simplexTable = Simplex.method();
+		if (simplexTable == null)
+			return;
+		CommonFunctions.printArray(Simplex.answer);
+		CommonFunctions.printArray(Simplex.rows);
+		while (isNotInt()) {
+			int indexInAnswerMaxFraction;
+			double[] q;
+
+			indexInAnswerMaxFraction = getIndexInAnswerMaxFraction();
+			q = new double[simplexTable[0].length];
+			initQ(simplexTable, q, Simplex.rows[indexInAnswerMaxFraction]);
+			CommonFunctions.printArray(q);
+			simplexTableSecond = genSimplexTableSecond(simplexTable, q);
+			CommonFunctions.printMatrix(simplexTableSecond);
+			return;
+		}
+	}
+
+	private static boolean isNotInt() {
+		for (int i = 0; i < Simplex.answer.length; i++) {
+			if (Simplex.answer[i] % 1 != 0)
+				return true;
+		}
+		return false;
+	}
+
+	private static int getIndexInAnswerMaxFraction() {
+		double max;
+		int index;
+
+		max = INF_MIN;
+		index = (int) INF_MIN;
+		for (int i = 0; i < Simplex.answer.length; i++) {
+			if (Simplex.answer[i] % 1 >= max) {
+				index = i;
+				max = Simplex.answer[i] % 1;
+			}
+		}
+		return index;
+	}
+
+	private static void initQ(double[][] simplexTable, double[] q, int indexRow) {
+		double fraction;
+
+		for (int j = 0; j < q.length; j++) {
+			fraction = simplexTable[indexRow][j] % 1;
+			if (fraction < 0)
+				fraction += 1;
+			q[j] = -fraction;
+		}
+	}
+
+	private static double[][] genSimplexTableSecond(double[][] simplexTable, double[] q) {
+		double[][] simplexTableSecond;
+
+		simplexTableSecond = new double[simplexTable.length + 1][simplexTable[0].length + 1];
+		for (int i = 0; i < simplexTable.length; i++) {
+			for (int j = 0; j < simplexTable[0].length; j++) {
+				if (i == simplexTable.length - 1) {
+					if (j == simplexTable[i].length - 1) {
+						simplexTableSecond[i][j] = 1;
+						simplexTableSecond[i][j + 1] = q[j];
+						continue;
+					}
+					simplexTableSecond[i][j] = q[j];
+					continue;
+				}
+				if (j == simplexTable[i].length - 1) {
+					simplexTableSecond[i][j + 1] = simplexTable[i][j];
+					continue;
+				}
+				simplexTableSecond[i][j] = simplexTable[i][j];
+			}
+		}
+		for (int j = 0; j < simplexTable[0].length; j++) {
+			if (j == simplexTable[0].length - 1) {
+				simplexTableSecond[simplexTable.length][j + 1] = -simplexTable[simplexTable.length - 1][j];
+				continue;
+			}
+			simplexTableSecond[simplexTable.length][j] = -simplexTable[simplexTable.length - 1][j];
+		}
+		return simplexTableSecond;
 	}
 }
